@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5eedf">
+  <meta name="description" content="Ein kleiner Adventskalender voller Knobelrätsel.">
+  <title>Ein rätselhafter Advent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <div class="eyebrow"><span class="tiny-star">✳</span> EIN KLEINER ADVENT VOLLER IDEEN <span class="tiny-star">✳</span></div>
+      <h1>Ein rätselhafter<br><em>Advent</em></h1>
+      <p class="intro">Zwölf kleine Türen. Zwölf kleine Denkabenteuer.<br>Alle zwei Tage wartet eine neue Knobelei auf dich.</p>
+      <div class="hero-rule"><span>❧</span></div>
+    </header>
+
+    <section class="calendar-section" aria-label="Adventskalender">
+      <div class="section-heading">
+        <div><span class="section-kicker">DEZEMBER</span><h2>Dein Rätselkalender</h2></div>
+        <div class="progress-wrap"><span id="progress-label">0 von 12 gelöst</span><div class="progress-track"><div id="progress-fill"></div></div></div>
+      </div>
+      <div id="calendar" class="calendar-grid"></div>
+      <p class="calendar-note"><span>✦</span> Die Türchen öffnen sich an ihrem jeweiligen Dezembertag.</p>
+    </section>
+
+    <footer>
+      <span>GEMACHT MIT EINER PRISE NEUGIER</span>
+      <span class="footer-sparkle">✳</span>
+      <span>FROHE VORWEIHNACHTSZEIT</span>
+    </footer>
+  </main>
+
+  <dialog id="puzzle-dialog" class="puzzle-dialog">
+    <div class="dialog-inner">
+      <button class="close-button" id="close-dialog" aria-label="Schließen">×</button>
+      <div class="dialog-date" id="dialog-date">TÜRCHEN 01</div>
+      <div class="dialog-ornament">✳</div>
+      <h2 id="puzzle-title"></h2>
+      <p id="puzzle-prompt" class="puzzle-prompt"></p>
+      <div id="puzzle-content" class="puzzle-content"></div>
+      <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+      <button id="check-answer" class="primary-button">Antwort prüfen <span>→</span></button>
+      <button id="hint-button" class="hint-button">Kleiner Hinweis?</button>
+      <p id="hint-text" class="hint-text" hidden></p>
+      <div id="solved-message" class="solved-message" hidden>✦ Sehr gut gelöst! Dieses Türchen gehört jetzt dir. ✦</div>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
