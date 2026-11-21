@@ -1,39 +1,59 @@
-# Ein rätselhafter Advent
+# Die kleine Rätselstube – Advent 2026
 
-Ein responsiver, statischer Adventskalender mit zwölf interaktiven Rätseln für GitHub Pages.
+Ein statischer, mobiloptimierter Adventskalender
+mit nostalgischer Weihnachtskarten-Ästhetik und
+zwölf interaktiven Knobelrätseln.
 
-## Lokal ansehen
+## Dateien
 
-`index.html` im Browser öffnen. Für die Vorschau aller Türchen vor dem jeweiligen Datum `?preview=1` an die URL hängen, z. B. `index.html?preview=1`.
+- index.html – Seitenstruktur
+- style.css – Gestaltung und responsives Layout
+- script.js – Rätsel, Interaktionen, Freischaltung und Fortschritt
 
-## Auf GitHub Pages veröffentlichen
+## Lokal testen
 
-1. Dieses Projekt in ein GitHub-Repository hochladen.
-2. Im Repository **Settings → Pages** öffnen.
-3. Unter **Build and deployment** als Quelle **Deploy from a branch** auswählen.
-4. Branch `main` und Ordner `/ (root)` auswählen und speichern.
-5. Nach dem Deployment ist die Seite unter der angezeigten GitHub-Pages-Adresse erreichbar.
+index.html im Browser öffnen.
 
-Es ist kein Build-Schritt und kein Backend nötig.
+Mit ?preview=1 an der URL werden alle Türchen
+vorzeitig freigeschaltet.
 
-## Jahr ändern
+Beispiel:
+index.html?preview=1
 
-In `script.js` ganz oben `CALENDAR_YEAR` anpassen. Standardmäßig ist 2026 eingetragen.
+## GitHub Pages
 
-## Rätsel anpassen
+1. Dateien in ein GitHub-Repository hochladen.
+2. Im Repository Settings → Pages öffnen.
+3. Deploy from a branch auswählen.
+4. Branch main und Ordner /(root) auswählen.
+5. Speichern.
 
-Die Rätsel stehen gesammelt im Array `puzzles` in `script.js`. Unterstützte Typen:
+Es ist kein Build-Schritt und kein Backend erforderlich.
 
-- `input`: freie Texteingabe
-- `choice`: eine Antwort aus mehreren Optionen
-- `sum`: genau drei Zahlen auswählen
-- `bits`: fünf Binär-Schalter
-- `order`: Zahlen mit Pfeilen sortieren
+## Kalenderjahr ändern
 
-Jedes Rätsel hat `day`, `title`, `type`, `prompt`, `answer` und `hint`. Je nach Typ kommen `visual`, `choices` oder `items` dazu.
+In script.js den Wert CALENDAR_YEAR anpassen.
 
-## Fortschritt und Türchen
+## Rätsel bearbeiten
 
-Die Freischaltung richtet sich nach dem lokalen Datum des Geräts und dem eingestellten Kalenderjahr. Der Lösungsstand wird im `localStorage` des Browsers gespeichert. Das bedeutet: Der Fortschritt ist geräte- und browserbezogen und wird nicht zwischen verschiedenen Geräten synchronisiert.
+Alle Rätsel stehen am Anfang von script.js
+im Array puzzles.
 
-Hinweis: Bei einem rein statischen GitHub-Pages-Projekt kann die Datumsprüfung nur im Browser erfolgen. Sie ist für einen privaten, spielerischen Kalender gedacht, nicht als manipulationssichere Zugangskontrolle. Die Vorschau `?preview=1` ist nur zum Testen gedacht.
+Unterstützte Rätseltypen:
+
+- input: Texteingabe
+- choice: Antwort auswählen
+- sum: Zahlen kombinieren
+- bits: Binärschalter
+- order: Zahlen sortieren
+- maze: Weg durch ein Raster finden
+- dials: Zahlenschloss einstellen
+- slide: 3x3-Schiebepuzzle
+
+## Technische Hinweise
+
+- Türchen werden anhand des lokalen Datums freigeschaltet.
+- Gelöste Rätsel werden im localStorage gespeichert.
+- Fortschritt bleibt auf demselben Browser und Gerät erhalten.
+- Die Datumsprüfung ist clientseitig und nicht manipulationssicher.
+- Der Vorschau-Modus ?preview=1 ist zum Testen gedacht.
