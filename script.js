@@ -1,144 +1,271 @@
-// ========================================
-// DIE KLEINE RÄTSELSTUBE
-// Adventskalender 2026
-// ========================================
+
+/* =====================================================
+   DIE KLEINE RÄTSELSTUBE – ADVENT 2026
+   Neue Rätselversion – Schwierigkeitsgrad ca. 5–10 Min.
+   ===================================================== */
 
 const CALENDAR_YEAR = 2026;
 const PREVIEW_MODE = new URLSearchParams(location.search).has("preview");
 
-const puzzles = [
+const STORAGE_KEY = "raetselstube-2026-v2";
+const DAYS = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23];
 
+const puzzles = [
   {
     day: 1,
-    title: "Die Folge im Schnee",
-    type: "input",
-    prompt: "Eine Zahlenreihe wurde in den Schnee geschrieben. Welche Zahl fehlt am Ende?",
-    visual: "3 · 8 · 15 · 24 · 35 · ?",
-    answer: "48",
-    hint: "Betrachte nicht nur die Zahlen, sondern die Abstände zwischen ihnen."
+    title: "Der mathematische Tresor",
+    kind: "input",
+    prompt:
+      "Im Tresor liegen zwei unbekannte Zahlen: x und y. " +
+      "Auf einem Zettel stehen zwei Gleichungen:\n\n" +
+      "2x + y = 17\n" +
+      "x + 2y = 19\n\n" +
+      "Der Code besteht aus x gefolgt von y. Welche zwei Ziffern öffnen den Tresor?",
+    visual: "2x + y = 17     |     x + 2y = 19",
+    answer: "57",
+    fragment: "W",
+    hints: [
+      "Du hast zwei Gleichungen mit zwei Unbekannten. Versuche, eine Variable zu eliminieren.",
+      "Verdopple die zweite Gleichung und ziehe die erste Gleichung davon ab.",
+      "Du erhältst 3y = 21. Damit ist y = 7 und x = 5."
+    ]
   },
 
   {
     day: 3,
-    title: "Drei aus sieben",
-    type: "sum",
-    prompt: "Wähle genau drei verschiedene Zahlen. Ihre Summe soll 24 ergeben.",
-    choices: [2, 4, 6, 7, 9, 11, 13],
-    answer: [2, 9, 13],
-    hint: "Sortiere die Zahlen gedanklich und prüfe, welche Kombination genau 24 ergibt."
+    title: "Die unmögliche Nachricht",
+    kind: "input",
+    prompt:
+      "Eine Nachricht wurde zweimal verschlüsselt.\n\n" +
+      "1. Zuerst wurde jeder Buchstabe durch seinen Gegenbuchstaben im Alphabet ersetzt (A ↔ Z, B ↔ Y usw.).\n" +
+      "2. Danach wurde jeder Buchstabe drei Stellen nach rechts verschoben.\n\n" +
+      "Entschlüssle die Nachricht und gib das ursprüngliche Wort ein.",
+    visual: "X L O K J",
+    answer: "FROST",
+    fragment: "I",
+    hints: [
+      "Du musst die Verschlüsselung in umgekehrter Reihenfolge rückgängig machen.",
+      "Mache zuerst die Verschiebung rückwärts: Gehe bei jedem Buchstaben drei Stellen zurück.",
+      "Danach verwendest du die Gegenbuchstaben im Alphabet. Das Ergebnis ist FROST."
+    ]
   },
 
   {
     day: 5,
-    title: "Der verschlüsselte Gruß",
-    type: "input",
-    prompt: "Ein alter Brief wurde mit einer Caesar-Verschiebung um drei Stellen verschlüsselt. Jeder Buchstabe wurde im Alphabet drei Plätze nach rechts verschoben. Entschlüssle das Wort.",
-    visual: "I U R V W",
-    answer: "FROST",
-    hint: "Gehe beim Entschlüsseln drei Buchstaben zurück. I wird zu F."
+    title: "Das Licht der Sterne",
+    kind: "circuit",
+    prompt:
+      "Eine kleine Schaltung steuert das Licht im Fenster.\n\n" +
+      "Die Eingänge haben folgende Werte:\n" +
+      "A = 1, B = 0, C = 1\n\n" +
+      "Die Schaltung arbeitet von links nach rechts:\n\n" +
+      "1. Berechne A XOR B.\n" +
+      "2. Berechne NICHT C ODER B.\n" +
+      "3. Verknüpfe die beiden Ergebnisse mit UND.\n" +
+      "4. ODER das Ergebnis mit A UND C.\n\n" +
+      "Welchen Wert hat der Ausgang? Gib 0 oder 1 ein.",
+    visual: "((A XOR B) UND (NICHT C ODER B)) ODER (A UND C)",
+    answer: "1",
+    fragment: "N",
+    hints: [
+      "XOR ist genau dann 1, wenn die beiden Eingänge unterschiedlich sind.",
+      "NICHT C ist 0. ODER verknüpft ergibt das mit B ebenfalls 0.",
+      "A XOR B = 1. Der erste UND-Teil ist 1 UND 0 = 0. A UND C = 1. Also 0 ODER 1 = 1."
+    ]
   },
 
   {
     day: 7,
-    title: "Das binäre Fenster",
-    type: "bits",
-    prompt: "Stelle die Dezimalzahl 173 mit den acht Schaltern dar. Die Stellenwerte stehen über den Schaltern. Schalte die passenden Werte ein.",
-    visual: "128 · 64 · 32 · 16 · 8 · 4 · 2 · 1",
-    weights: [128, 64, 32, 16, 8, 4, 2, 1],
-    answer: "10101101",
-    hint: "Zerlege 173 in Zweierpotenzen: 128 + 32 + 8 + 4 + 1."
+    title: "Die zwölf Verdächtigen",
+    kind: "choice",
+    prompt:
+      "Im Postzimmer wurde ein goldener Schlüssel gestohlen. " +
+      "Drei Personen kommen infrage: Ada, Ben und Clara.\n\n" +
+      "Ada sagt: „Ben war es.“\n" +
+      "Ben sagt: „Ada war es nicht.“\n" +
+      "Clara sagt: „Ben war es nicht.“\n\n" +
+      "Es gilt: Genau eine dieser drei Aussagen ist wahr. " +
+      "Wer hat den Schlüssel genommen?",
+    choices: ["Ada", "Ben", "Clara"],
+    answer: "Ada",
+    fragment: "T",
+    hints: [
+      "Nimm nacheinander jede Person als Täter an und prüfe alle drei Aussagen.",
+      "Wenn Ada die Täterin ist, sind Bens und Claras Aussagen unterschiedlich zu bewerten.",
+      "Bei Ada als Täterin sind Adas Aussage falsch, Bens Aussage falsch und Claras Aussage wahr."
+    ]
   },
 
   {
     day: 9,
-    title: "Die Ordnung der Dinge",
-    type: "order",
-    prompt: "Der Bibliothekar hat fünf Seitenzahlen durcheinandergebracht. Ordne sie aufsteigend, indem du die Karten mit den Pfeilen verschiebst.",
-    items: [34, 13, 21, 8, 5],
-    answer: [5, 8, 13, 21, 34],
-    hint: "Es sind aufeinanderfolgende Zahlen der Fibonacci-Folge."
+    title: "Das Muster im Kalender",
+    kind: "input",
+    prompt:
+      "Ein alter Kalender enthält eine Zahlenmatrix. " +
+      "Die Zahlen wurden nach einer festen Regel eingetragen.\n\n" +
+      "Finde die fehlende Zahl in der letzten Zeile.",
+    visual:
+      "2     3      8\n" +
+      "3     4     15\n" +
+      "4     5      ?",
+    answer: "24",
+    fragment: "E",
+    hints: [
+      "Untersuche, wie die ersten beiden Zahlen einer Zeile zur dritten Zahl führen.",
+      "Multipliziere die ersten beiden Zahlen und addiere anschließend die erste Zahl.",
+      "4 × 5 + 4 = 24."
+    ]
   },
 
   {
     day: 11,
-    title: "Die drei Schachteln",
-    type: "choice",
-    prompt: "In genau einer von drei Schachteln liegt ein Schlüssel. Auf den Schachteln stehen Hinweise: Gold: „Der Schlüssel liegt nicht hier.“ Silber: „Der Schlüssel liegt in der Goldschachtel.“ Holz: „Der Schlüssel liegt nicht in der Silberschachtel.“ Genau einer der drei Hinweise ist wahr. In welcher Schachtel liegt der Schlüssel?",
-    choices: ["Gold", "Silber", "Holz", "Das lässt sich nicht bestimmen"],
-    answer: "Silber",
-    hint: "Teste die drei möglichen Fundorte. Nur bei einer Schachtel ist genau ein Hinweis wahr."
+    title: "Die falschen Wegweiser",
+    kind: "choice",
+    prompt:
+      "Drei Personen stehen vor der verschlossenen Weihnachtskammer. " +
+      "Eine von ihnen hat den Schlüssel genommen.\n\n" +
+      "Mira sagt: „Noah hat den Schlüssel genommen.“\n" +
+      "Noah sagt: „Oskar hat den Schlüssel genommen.“\n" +
+      "Oskar sagt: „Noah lügt.“\n\n" +
+      "Du weißt: Genau zwei Aussagen sind wahr. " +
+      "Wer hat den Schlüssel?",
+    choices: ["Mira", "Noah", "Oskar"],
+    answer: "Noah",
+    fragment: "R",
+    hints: [
+      "Wenn Noah der Täter ist, ist Miras Aussage wahr.",
+      "Prüfe zusätzlich, ob Noahs Aussage dann wahr oder falsch ist.",
+      "Bei Noah als Täter sind Miras und Oskars Aussagen wahr, Noahs Aussage ist falsch."
+    ]
   },
 
   {
     day: 13,
-    title: "Der Weg durch den Tannenwald",
-    type: "maze",
-    prompt: "Führe den kleinen Stern vom Start (S) zum Ziel (Z). Tippe die Felder in der richtigen Reihenfolge an. Diagonale Schritte sind nicht erlaubt; dunkle Felder sind verschneite Felsen.",
-    answer: "0,1|0,2|1,2|2,2|2,3|3,3|4,3|4,4",
-    hint: "Der Weg führt zunächst nach rechts, dann hinunter durch die freie mittlere Passage.",
+    title: "Der verschneite Irrgarten",
+    kind: "maze",
+    prompt:
+      "Finde den Weg durch den verschneiten Irrgarten.\n\n" +
+      "Du startest links oben und musst das Ziel rechts unten erreichen. " +
+      "Sammle unterwegs alle drei Sterne ein. Dunkle Felder sind Felsen. " +
+      "Du darfst nur waagerecht oder senkrecht gehen. " +
+      "Du kannst deinen Weg auch zurückverfolgen.\n\n" +
+      "Tippe die Felder nacheinander an und prüfe am Ende deine Route.",
     walls: [
-      "1,0", "1,1", "3,0", "3,1",
-      "3,2", "1,3", "2,4", "3,4"
+      "1,1", "1,2", "1,3",
+      "2,1", "3,1", "3,2",
+      "3,3", "1,0", "2,3"
+    ],
+    keys: ["0,4", "4,0", "2,2"],
+    start: "0,0",
+    goal: "4,4",
+    fragment: "S",
+    hints: [
+      "Ein Stern liegt ganz oben rechts, einer ganz unten links und einer in der Mitte.",
+      "Du musst nicht den kürzesten Weg nehmen. Plane eine Route, die alle drei Sterne berührt.",
+      "Gehe zuerst über die obere Reihe zum Stern rechts oben. Danach über den rechten Rand nach unten und über die untere Reihe zum Stern links unten. Von dort über die linke Seite und die Mitte zum letzten Stern. Anschließend zum Ziel."
     ]
   },
 
   {
     day: 15,
-    title: "Die drei Zahlensiegel",
-    type: "dials",
-    prompt: "Drei Zahlensiegel öffnen die Schatulle. Stelle die Ziffern so ein, dass alle Bedingungen erfüllt sind: Die Summe ist 12, die mittlere Ziffer ist doppelt so groß wie die erste, und die letzte ist um 2 größer als die erste.",
-    answer: "246",
-    hint: "Nenne die erste Ziffer x. Dann lauten die drei Ziffern x, 2x und x+2."
+    title: "Das Schloss der drei Könige",
+    kind: "dial",
+    prompt:
+      "Ein Zahlenschloss hat drei Ziffern. Die Könige haben drei Hinweise hinterlassen:\n\n" +
+      "1. Die Summe aller Ziffern beträgt 16.\n" +
+      "2. Die erste Ziffer ist genau eins größer als die mittlere.\n" +
+      "3. Die letzte Ziffer ist genau drei größer als die mittlere.\n\n" +
+      "Stelle den dreistelligen Code mit den Zahlendrehern ein.",
+    answer: "547",
+    fragment: "T",
+    hints: [
+      "Nenne die mittlere Ziffer x. Die anderen beiden lassen sich durch x ausdrücken.",
+      "Die drei Ziffern lauten x+1, x und x+3.",
+      "Die Summe ist 3x + 4 = 16. Also ist x = 4. Der Code lautet 547."
+    ]
   },
 
   {
     day: 17,
-    title: "Stern, Mond und Tanne",
-    type: "input",
-    prompt: "Jedes Symbol steht für eine positive ganze Zahl. Es gilt: Stern + Stern + Mond = 19 und Mond minus Tanne = 2. Außerdem ist Stern = 6. Welchen Wert hat die Tanne?",
-    visual: "★ + ★ + ☾ = 19   |   ☾ − ▲ = 2",
-    answer: "5",
-    hint: "Bestimme zuerst den Mondwert. Ziehe davon anschließend 2 ab."
+    title: "Die geheime Rezeptur",
+    kind: "input",
+    prompt:
+      "In einem alten Rezeptbuch stehen drei Symbole. Jedes Symbol steht für eine positive ganze Zahl.\n\n" +
+      "★ + ★ + ☾ = 18\n" +
+      "★ + ☾ + ▲ = 19\n" +
+      "☾ − ▲ = 2\n\n" +
+      "Finde die Werte für Stern, Mond und Tanne. " +
+      "Gib sie in dieser Reihenfolge und ohne Leerzeichen ein.",
+    visual: "★ + ★ + ☾ = 18     |     ★ + ☾ + ▲ = 19     |     ☾ − ▲ = 2",
+    answer: "586",
+    fragment: "E",
+    hints: [
+      "Die dritte Gleichung verrät dir den Unterschied zwischen Mond und Tanne.",
+      "Setze ▲ = ☾ − 2 in die zweite Gleichung ein. Vergleiche dann mit der ersten.",
+      "Die Werte sind Stern = 5, Mond = 8 und Tanne = 6."
+    ]
   },
 
   {
     day: 19,
-    title: "Der Fall der verschwundenen Praline",
-    type: "choice",
-    prompt: "Eine Person hat die Praline genommen. Genau eine der folgenden Aussagen ist wahr. Alex: „Es war Bea.“ Bea: „Ich war es nicht.“ Cora: „Alex war es nicht.“ Wer war es?",
-    choices: ["Alex", "Bea", "Cora", "Nicht eindeutig"],
-    answer: "Alex",
-    hint: "Teste jeden möglichen Täter. Bei Alex als Täter ist nur Beas Aussage wahr."
+    title: "Der verschwundene Weihnachtsschlüssel",
+    kind: "input",
+    prompt:
+      "Vier Gäste kamen nacheinander in die Weihnachtsstube: Nora, Felix, Greta und Hugo.\n\n" +
+      "Aus dem Gästebuch sind nur diese Hinweise übrig:\n\n" +
+      "• Felix kam zuletzt.\n" +
+      "• Greta kam unmittelbar vor Hugo.\n" +
+      "• Nora kam nicht als Erste.\n\n" +
+      "In welcher Reihenfolge kamen die vier Gäste? " +
+      "Gib die Anfangsbuchstaben ohne Leerzeichen ein.",
+    answer: "GHNF",
+    fragment: "R",
+    hints: [
+      "Felix muss an vierter Stelle stehen.",
+      "Greta und Hugo bilden ein direkt aufeinanderfolgendes Paar: GH.",
+      "Da Nora nicht Erste sein darf und Felix Letzter ist, bleibt nur GHNF."
+    ]
   },
 
   {
     day: 21,
-    title: "Das kleine Schiebewerk",
-    type: "slide",
-    prompt: "Bringe die Zahlen in die Reihenfolge 1 bis 8. Tippe eine Kachel neben dem leeren Feld an, um sie hineinzuschieben.",
-    answer: "1,2,3,4,5,6,7,8,0",
-    initial: [1, 2, 3, 4, 0, 6, 7, 5, 8],
-    hint: "Arbeite zeilenweise: erst die obere Reihe, dann die mittlere. Das leere Feld muss am Ende rechts unten stehen."
+    title: "Die Werkstatt der Uhrmacher",
+    kind: "slide",
+    prompt:
+      "Der Uhrmacher hat die Zahlenplättchen durcheinandergebracht. " +
+      "Ordne sie von 1 bis 15. Das leere Feld gehört ganz nach rechts unten.\n\n" +
+      "Du kannst immer nur ein Plättchen verschieben, das direkt neben dem leeren Feld liegt.",
+    fragment: "N",
+    hints: [
+      "Beginne mit der obersten Reihe und arbeite dich nach unten vor.",
+      "Versuche, zuerst die Zahlen 1 bis 4 und danach 5 bis 8 an ihren Platz zu bringen.",
+      "Das leere Feld muss am Ende unten rechts stehen. Du kannst das Puzzle jederzeit neu mischen."
+    ]
   },
 
   {
     day: 23,
-    title: "Das letzte Siegel",
-    type: "input",
-    prompt: "Das Finale vereint drei Zahlen aus dem Weihnachtsbrief: die Anzahl der Türchen, die Anzahl der Tage zwischen dem ersten und letzten Türchen und die Anzahl der Monate im Jahr. Addiere diese drei Zahlen.",
-    visual: "12 + 22 + 12 = ?",
-    answer: "46",
-    hint: "Es gibt 12 Rätseltürchen. Vom 1. bis zum 23. sind es 22 Tage Abstand. Ein Jahr hat 12 Monate."
+    title: "Das letzte Weihnachtsgeheimnis",
+    kind: "final",
+    prompt:
+      "Du hast elf Briefe geöffnet und in jedem einen Buchstaben gefunden. " +
+      "Diese Buchstaben ergeben gemeinsam den Namen eines winterlichen Geheimnisses.\n\n" +
+      "Ordne die Fragmente in der Reihenfolge der Türchen und gib das Lösungswort ein.",
+    answer: "WINTERSTERN",
+    hints: [
+      "Du brauchst die Buchstaben aus allen elf vorherigen Türchen.",
+      "Die Buchstaben ergeben ein zusammengesetztes Wort aus zwei Teilen.",
+      "Das Wort beginnt mit WINTER und endet mit STERN."
+    ]
   }
-
 ];
 
 
-// ========================================
-// GRUNDLEGENDE FUNKTIONEN
-// ========================================
+/* =====================================================
+   ELEMENTE UND ZUSTAND
+   ===================================================== */
 
-const $ = s => document.querySelector(s);
+const $ = selector => document.querySelector(selector);
 
 const calendar = $("#calendar");
 const dialog = $("#puzzle-dialog");
@@ -146,108 +273,105 @@ const content = $("#puzzle-content");
 
 let active = null;
 let selected = [];
-let bits = [];
-let order = [];
+let hintLevel = 0;
 let mazePath = [];
+let dialValues = [0, 0, 0];
 let slide = [];
 
-const storageKey = "raetselstube-" + CALENDAR_YEAR;
+const savedState = loadState();
 
-
-function solved() {
+function loadState() {
   try {
-    return JSON.parse(localStorage.getItem(storageKey) || "[]");
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      solved: [],
+      fragments: {}
+    };
   } catch {
-    return [];
+    return { solved: [], fragments: {} };
   }
 }
 
+function persist() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+}
+
+function isSolved(day) {
+  return savedState.solved.includes(day);
+}
 
 function unlocked(day) {
   if (PREVIEW_MODE) return true;
 
-  const d = new Date();
+  const now = new Date();
 
-  return d.getFullYear() > CALENDAR_YEAR ||
+  return now.getFullYear() > CALENDAR_YEAR ||
     (
-      d.getFullYear() === CALENDAR_YEAR &&
-      d.getMonth() === 11 &&
-      d.getDate() >= day
+      now.getFullYear() === CALENDAR_YEAR &&
+      now.getMonth() === 11 &&
+      now.getDate() >= day
     );
 }
 
-
-function save(day) {
-  const a = solved();
-
-  if (!a.includes(day)) {
-    a.push(day);
+function savePuzzle(puzzle) {
+  if (!isSolved(puzzle.day)) {
+    savedState.solved.push(puzzle.day);
   }
 
-  localStorage.setItem(storageKey, JSON.stringify(a));
+  if (puzzle.fragment) {
+    savedState.fragments[puzzle.day] = puzzle.fragment;
+  }
+
+  persist();
 }
 
 
-// ========================================
-// KALENDER DARSTELLEN
-// ========================================
+/* =====================================================
+   KALENDER
+   ===================================================== */
 
 function renderCalendar() {
-
   calendar.innerHTML = "";
 
-  const done = solved();
+  puzzles.forEach((puzzle, index) => {
+    const button = document.createElement("button");
+    const open = unlocked(puzzle.day);
+    const complete = isSolved(puzzle.day);
 
-  puzzles.forEach((p, i) => {
+    button.className = "door" + (complete ? " is-solved" : "");
+    button.disabled = !open;
 
-    const b = document.createElement("button");
-    const open = unlocked(p.day);
-    const complete = done.includes(p.day);
-
-    b.className = "door" + (complete ? " is-solved" : "");
-    b.disabled = !open;
-
-    b.setAttribute(
+    button.setAttribute(
       "aria-label",
-      `Türchen ${p.day}: ${
-        complete ? "gelöst" : open ? "öffnen" : "noch verschlossen"
-      }`
+      `Türchen ${puzzle.day}: ${complete ? "gelöst" : open ? "öffnen" : "verschlossen"}`
     );
 
-    b.innerHTML = `
+    button.innerHTML = `
       <span class="door-mark">${complete ? "✓" : open ? "✳" : "✧"}</span>
-      <span class="door-number">${String(p.day).padStart(2, "0")}</span>
-      <span class="door-caption">${
-        complete ? "Gelöst" : open ? "Brief öffnen" : "Versiegelt"
-      }</span>
+      <span class="door-number">${String(puzzle.day).padStart(2, "0")}</span>
+      <span class="door-caption">${complete ? "Gelöst" : open ? "Brief öffnen" : "Versiegelt"}</span>
     `;
 
-    b.addEventListener("click", () => openPuzzle(i));
-
-    calendar.appendChild(b);
-
+    button.addEventListener("click", () => openPuzzle(index));
+    calendar.appendChild(button);
   });
 
-  $("#progress-label").textContent = `${done.length} / 12 gelöst`;
+  const count = savedState.solved.filter(day => DAYS.includes(day)).length;
 
-  $("#progress-fill").style.width =
-    `${done.length / 12 * 100}%`;
+  $("#progress-label").textContent = `${count} / 12 gelöst`;
+  $("#progress-fill").style.width = `${count / 12 * 100}%`;
 }
 
 
-// ========================================
-// RÄTSEL ÖFFNEN
-// ========================================
+/* =====================================================
+   RÄTSEL ÖFFNEN
+   ===================================================== */
 
-function openPuzzle(i) {
-
-  active = puzzles[i];
-
+function openPuzzle(index) {
+  active = puzzles[index];
   selected = [];
-  bits = Array(active.type === "bits" ? 8 : 0).fill(false);
-  order = [...(active.items || [])];
+  hintLevel = 0;
   mazePath = [];
-  slide = [...(active.initial || [])];
+  dialValues = [0, 0, 0];
 
   $("#dialog-date").textContent =
     `BRIEF NR. ${String(active.day).padStart(2, "0")}`;
@@ -259,15 +383,17 @@ function openPuzzle(i) {
   $("#feedback").className = "feedback";
 
   $("#hint-text").hidden = true;
-  $("#hint-text").textContent = active.hint;
+  $("#hint-text").textContent = "";
 
+  $("#hint-button").textContent = "Hinweis 1 öffnen";
   $("#hint-button").hidden = false;
+
   $("#check-answer").hidden = false;
   $("#solved-message").hidden = true;
 
   renderPuzzle();
 
-  if (solved().includes(active.day)) {
+  if (isSolved(active.day)) {
     showSolved();
   }
 
@@ -275,598 +401,506 @@ function openPuzzle(i) {
 }
 
 
-// ========================================
-// RÄTSEL ELEMENTE
-// ========================================
+/* =====================================================
+   ALLGEMEINE RENDER-HELFER
+   ===================================================== */
 
-function visual(text) {
+function addVisual(text) {
+  const element = document.createElement("div");
+  element.className = "puzzle-visual";
+  element.style.whiteSpace = "pre-line";
+  element.textContent = text;
+  content.appendChild(element);
+}
 
-  const v = document.createElement("div");
+function addInput(placeholder = "Deine Lösung …") {
+  const input = document.createElement("input");
 
-  v.className = "puzzle-visual";
-  v.textContent = text;
+  input.id = "answer-input";
+  input.className = "answer-input";
+  input.placeholder = placeholder;
+  input.autocomplete = "off";
+  input.setAttribute("aria-label", "Deine Lösung");
 
-  content.appendChild(v);
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter") checkAnswer();
+  });
+
+  content.appendChild(input);
+  setTimeout(() => input.focus(), 50);
+}
+
+function addChoices(choices) {
+  const list = document.createElement("div");
+  list.className = "choice-list";
+
+  choices.forEach(choice => {
+    const button = document.createElement("button");
+    button.className = "choice-button";
+    button.textContent = choice;
+
+    button.addEventListener("click", () => {
+      selected = [choice];
+
+      list.querySelectorAll("button").forEach(item => {
+        item.classList.toggle("selected", item === button);
+      });
+    });
+
+    list.appendChild(button);
+  });
+
+  content.appendChild(list);
 }
 
 
-// ========================================
-// RÄTSEL RENDERN
-// ========================================
+/* =====================================================
+   RÄTSEL RENDERN
+   ===================================================== */
 
 function renderPuzzle() {
-
   content.innerHTML = "";
 
   if (active.visual) {
-    visual(active.visual);
+    addVisual(active.visual);
   }
 
-
-  // FREIE TEXTEINGABE
-
-  if (active.type === "input") {
-
-    const x = document.createElement("input");
-
-    x.id = "answer-input";
-    x.className = "answer-input";
-    x.placeholder = "Deine Lösung …";
-    x.autocomplete = "off";
-    x.setAttribute("aria-label", "Deine Lösung");
-
-    x.addEventListener("keydown", e => {
-      if (e.key === "Enter") check();
-    });
-
-    content.appendChild(x);
-
-    setTimeout(() => x.focus(), 40);
+  if (active.kind === "input") {
+    addInput();
   }
 
-
-  // AUSWAHLRÄTSEL
-
-  if (active.type === "choice") {
-
-    const list = document.createElement("div");
-    list.className = "choice-list";
-
-    active.choices.forEach(c => {
-
-      const b = document.createElement("button");
-
-      b.className = "choice-button";
-      b.textContent = c;
-
-      b.onclick = () => {
-
-        selected = [c];
-
-        list.querySelectorAll("button").forEach(x => {
-          x.classList.toggle("selected", x === b);
-        });
-
-      };
-
-      list.appendChild(b);
-
-    });
-
-    content.appendChild(list);
+  if (active.kind === "choice") {
+    addChoices(active.choices);
   }
 
-
-  // ZAHLENKOMBINATION
-
-  if (active.type === "sum") {
-
-    const list = document.createElement("div");
-    list.className = "choice-list";
-
-    active.choices.forEach(c => {
-
-      const b = document.createElement("button");
-
-      b.className = "choice-button";
-      b.textContent = c;
-
-      b.onclick = () => {
-
-        if (selected.includes(c)) {
-
-          selected = selected.filter(x => x !== c);
-
-        } else if (selected.length < 3) {
-
-          selected.push(c);
-
-        }
-
-        b.classList.toggle("selected", selected.includes(c));
-
-        $("#selection-count").textContent =
-          `${selected.length} / 3 ausgewählt`;
-
-      };
-
-      list.appendChild(b);
-
-    });
-
-    content.appendChild(list);
-
-    const n = document.createElement("p");
-
-    n.id = "selection-count";
-    n.style.cssText = "font-size:.72rem;color:#887665";
-    n.textContent = "0 / 3 ausgewählt";
-
-    content.appendChild(n);
+  if (active.kind === "circuit") {
+    addVisual("A = 1     B = 0     C = 1");
+    addInput("Ausgang: 0 oder 1");
   }
 
-
-  // BINÄRSCHALTER
-
-  if (active.type === "bits") {
-
-    const row = document.createElement("div");
-    row.className = "bit-row";
-
-    active.weights.forEach((w, i) => {
-
-      const b = document.createElement("button");
-
-      b.className = "bit-button";
-      b.innerHTML = `<small>${w}</small>0`;
-
-      b.onclick = () => {
-
-        bits[i] = !bits[i];
-
-        b.classList.toggle("on", bits[i]);
-
-        b.innerHTML = `
-          <small>${w}</small>
-          ${bits[i] ? 1 : 0}
-        `;
-
-      };
-
-      row.appendChild(b);
-
-    });
-
-    content.appendChild(row);
-  }
-
-
-  // SORTIERRÄTSEL
-
-  if (active.type === "order") {
-
-    const list = document.createElement("div");
-
-    list.className = "order-list";
-
-    content.appendChild(list);
-
-    drawOrder(list);
-  }
-
-
-  // LABYRINTH
-
-  if (active.type === "maze") {
+  if (active.kind === "maze") {
     drawMaze();
   }
 
-
-  // ZAHLENSCHLOSS
-
-  if (active.type === "dials") {
+  if (active.kind === "dial") {
     drawDials();
   }
 
-
-  // SCHIEBEPuzzle
-
-  if (active.type === "slide") {
-    drawSlide();
+  if (active.kind === "slide") {
+    createSlidePuzzle();
   }
 
+  if (active.kind === "final") {
+    drawFragments();
+    addInput("Geheimes Lösungswort …");
+  }
 }
 
 
-// ========================================
-// ZAHLEN SORTIEREN
-// ========================================
-
-function drawOrder(list) {
-
-  list.innerHTML = "";
-
-  order.forEach((n, i) => {
-
-    const row = document.createElement("div");
-    row.className = "order-item";
-
-    const t = document.createElement("strong");
-    t.textContent = n;
-
-    row.appendChild(t);
-
-    const c = document.createElement("div");
-    c.className = "move-controls";
-
-    [-1, 1].forEach(d => {
-
-      const b = document.createElement("button");
-
-      b.className = "move-button";
-      b.textContent = d < 0 ? "↑" : "↓";
-
-      b.disabled = i + d < 0 || i + d >= order.length;
-
-      b.onclick = () => {
-
-        [order[i], order[i + d]] =
-          [order[i + d], order[i]];
-
-        drawOrder(list);
-
-      };
-
-      c.appendChild(b);
-
-    });
-
-    row.appendChild(c);
-    list.appendChild(row);
-
-  });
-
-}
-
-
-// ========================================
-// ZAHLENLABYRINTH
-// ========================================
+/* =====================================================
+   ZAHLENLABYRINTH MIT STERNEN
+   ===================================================== */
 
 function drawMaze() {
-
   const grid = document.createElement("div");
-
   grid.className = "maze-grid";
 
   const walls = active.walls;
+  const keys = active.keys;
 
-  for (let r = 0; r < 5; r++) {
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 5; col++) {
+      const id = `${row},${col}`;
+      const button = document.createElement("button");
 
-    for (let c = 0; c < 5; c++) {
+      button.className = "maze-cell";
 
-      const id = `${r},${c}`;
-
-      const b = document.createElement("button");
-
-      b.className = "maze-cell";
-
-      b.textContent =
-        id === "0,0" ? "S" :
-        id === "4,4" ? "Z" :
-        walls.includes(id) ? "×" : "";
-
-      if (walls.includes(id)) {
-        b.classList.add("wall");
-      }
-
-      if (id === "0,0") {
-        b.classList.add("start");
-      }
-
-      if (id === "4,4") {
-        b.classList.add("goal");
+      if (id === active.start) {
+        button.textContent = "S";
+        button.classList.add("start");
+      } else if (id === active.goal) {
+        button.textContent = "Z";
+        button.classList.add("goal");
+      } else if (walls.includes(id)) {
+        button.textContent = "×";
+        button.classList.add("wall");
+      } else if (keys.includes(id)) {
+        button.textContent = "★";
+        button.classList.add("key-cell");
+      } else {
+        button.textContent = "";
       }
 
       if (mazePath.includes(id)) {
-        b.classList.add("path");
+        button.classList.add("path");
       }
 
-      b.disabled = walls.includes(id) || id === "0,0";
+      button.disabled =
+        walls.includes(id) ||
+        id === active.start;
 
-      b.onclick = () => {
-
+      button.addEventListener("click", () => {
         const last = mazePath.length
           ? mazePath[mazePath.length - 1]
-          : "0,0";
+          : active.start;
 
-        const [lr, lc] = last.split(",").map(Number);
+        const [lastRow, lastCol] = last.split(",").map(Number);
 
-        if (Math.abs(r - lr) + Math.abs(c - lc) !== 1) {
-
-          $("#feedback").textContent =
-            "Nur ein Schritt nach oben, unten, links oder rechts.";
-
+        if (Math.abs(row - lastRow) + Math.abs(col - lastCol) !== 1) {
+          setFeedback("Du kannst nur ein benachbartes Feld betreten.");
           return;
         }
 
-        mazePath.push(id);
+        // Ein Schritt zurück ist erlaubt.
+        if (mazePath.length >= 2 && id === mazePath[mazePath.length - 2]) {
+          mazePath.pop();
+        } else {
+          mazePath.push(id);
+        }
 
         drawMaze();
 
-        if (id === "4,4") {
-          $("#feedback").textContent =
-            "Am Ziel angekommen – prüfe deine Route!";
+        if (id === active.goal) {
+          setFeedback("Du hast das Ziel erreicht. Prüfe jetzt deine Route.");
         }
+      });
 
-      };
-
-      grid.appendChild(b);
-
+      grid.appendChild(button);
     }
-
   }
 
   content.appendChild(grid);
 
-  const reset = document.createElement("button");
+  const found = active.keys.filter(key =>
+    mazePath.includes(key)
+  ).length;
 
+  const status = document.createElement("p");
+  status.className = "maze-status";
+  status.textContent = `Sterne gesammelt: ${found} / 3`;
+  content.appendChild(status);
+
+  const reset = document.createElement("button");
   reset.className = "hint-button";
   reset.textContent = "Weg zurücksetzen";
 
-  reset.onclick = () => {
-
+  reset.addEventListener("click", () => {
     mazePath = [];
-
-    $("#feedback").textContent = "";
-
+    setFeedback("");
     drawMaze();
-
-  };
+  });
 
   content.appendChild(reset);
-
 }
 
 
-// ========================================
-// ZAHLENSCHLOSS
-// ========================================
+/* =====================================================
+   ZAHLENSCHLOSS
+   ===================================================== */
 
 function drawDials() {
-
   const row = document.createElement("div");
-
   row.className = "dial-row";
 
-  [0, 0, 0].forEach((v, i) => {
-
+  dialValues.forEach((value, index) => {
     const box = document.createElement("div");
-
     box.className = "dial";
 
     const up = document.createElement("button");
     up.textContent = "▲";
+    up.setAttribute("aria-label", "Ziffer erhöhen");
 
-    const num = document.createElement("strong");
-    num.textContent = v;
+    const number = document.createElement("strong");
+    number.textContent = value;
 
     const down = document.createElement("button");
     down.textContent = "▼";
+    down.setAttribute("aria-label", "Ziffer verringern");
 
-    up.onclick = () => {
+    up.addEventListener("click", () => {
+      dialValues[index] = (dialValues[index] + 1) % 10;
+      number.textContent = dialValues[index];
+      row.dataset.value = dialValues.join("");
+    });
 
-      v = (v + 1) % 10;
-      num.textContent = v;
+    down.addEventListener("click", () => {
+      dialValues[index] = (dialValues[index] + 9) % 10;
+      number.textContent = dialValues[index];
+      row.dataset.value = dialValues.join("");
+    });
 
-      row.dataset.value =
-        [...row.querySelectorAll("strong")]
-          .map(x => x.textContent).join("");
-
-    };
-
-    down.onclick = () => {
-
-      v = (v + 9) % 10;
-      num.textContent = v;
-
-      row.dataset.value =
-        [...row.querySelectorAll("strong")]
-          .map(x => x.textContent).join("");
-
-    };
-
-    box.append(up, num, down);
-
+    box.append(up, number, down);
     row.appendChild(box);
-
   });
 
-  row.dataset.value = "000";
-
+  row.dataset.value = dialValues.join("");
   content.appendChild(row);
-
 }
 
 
-// ========================================
-// SCHIEBEPUZZLE
-// ========================================
+/* =====================================================
+   SCHIEBEPUZZLE
+   ===================================================== */
+
+function createSlidePuzzle() {
+  slide = Array.from({ length: 16 }, (_, i) => i + 1);
+  slide[15] = 0;
+
+  // Das Puzzle wird durch legale Züge gemischt.
+  // Dadurch bleibt es immer lösbar.
+  let previousBlank = -1;
+  let blank = 15;
+
+  for (let move = 0; move < 32; move++) {
+    const row = Math.floor(blank / 4);
+    const col = blank % 4;
+
+    const candidates = [
+      row > 0 ? blank - 4 : -1,
+      row < 3 ? blank + 4 : -1,
+      col > 0 ? blank - 1 : -1,
+      col < 3 ? blank + 1 : -1
+    ].filter(index => index >= 0 && index !== previousBlank);
+
+    const next = candidates[(move * 7 + 3) % candidates.length];
+
+    [slide[blank], slide[next]] = [slide[next], slide[blank]];
+
+    previousBlank = blank;
+    blank = next;
+  }
+
+  drawSlide();
+}
 
 function drawSlide() {
-
   const grid = document.createElement("div");
+  grid.className = "maze-grid slide-grid";
+  grid.style.gridTemplateColumns = "repeat(4, minmax(0, 1fr))";
 
-  grid.className = "maze-grid";
-  grid.style.gridTemplateColumns = "repeat(3,1fr)";
+  slide.forEach((number, index) => {
+    const button = document.createElement("button");
+    button.className = "maze-cell slide-cell";
+    button.textContent = number || "·";
 
-  slide.forEach((n, i) => {
-
-    const b = document.createElement("button");
-
-    b.className = "maze-cell";
-    b.textContent = n || "·";
-
-    if (!n) {
-      b.classList.add("goal");
+    if (!number) {
+      button.classList.add("goal");
     }
 
-    b.onclick = () => {
-
-      const z = slide.indexOf(0);
+    button.addEventListener("click", () => {
+      const blank = slide.indexOf(0);
 
       const distance =
-        Math.abs(Math.floor(i / 3) - Math.floor(z / 3)) +
-        Math.abs(i % 3 - z % 3);
+        Math.abs(Math.floor(index / 4) - Math.floor(blank / 4)) +
+        Math.abs(index % 4 - blank % 4);
 
       if (distance !== 1) return;
 
-      [slide[i], slide[z]] = [slide[z], slide[i]];
+      [slide[index], slide[blank]] = [slide[blank], slide[index]];
 
       drawSlide();
+    });
 
-    };
-
-    grid.appendChild(b);
-
+    grid.appendChild(button);
   });
 
+  content.innerHTML = "";
   content.appendChild(grid);
 
+  const reset = document.createElement("button");
+  reset.className = "hint-button";
+  reset.textContent = "Neu mischen";
+
+  reset.addEventListener("click", createSlidePuzzle);
+  content.appendChild(reset);
 }
 
 
-// ========================================
-// LÖSUNGEN PRÜFEN
-// ========================================
+/* =====================================================
+   FINALE: GESAMMELTE FRAGMENTE
+   ===================================================== */
 
-function check() {
+function drawFragments() {
+  const box = document.createElement("div");
+  box.className = "fragment-box";
 
-  if (!active || solved().includes(active.day)) return;
+  const collected = DAYS
+    .filter(day => day !== 23 && savedState.fragments[day])
+    .map(day => savedState.fragments[day]);
 
-  let ok = false;
+  const missing = DAYS.filter(day =>
+    day !== 23 && !savedState.fragments[day]
+  );
+
+  const heading = document.createElement("strong");
+  heading.textContent = "Deine gesammelten Buchstaben";
+  box.appendChild(heading);
+
+  const letters = document.createElement("div");
+  letters.className = "fragment-letters";
+  letters.textContent = collected.length
+    ? collected.join(" · ")
+    : "Noch keine Fragmente gesammelt";
+
+  box.appendChild(letters);
+
+  const status = document.createElement("p");
+  status.textContent = missing.length
+    ? `Es fehlen noch ${missing.length} Fragmente.`
+    : "Alle elf Fragmente sind beisammen.";
+
+  box.appendChild(status);
+  content.appendChild(box);
+}
 
 
-  if (active.type === "input") {
+/* =====================================================
+   ANTWORTEN PRÜFEN
+   ===================================================== */
 
-    ok =
-      $("#answer-input").value
-        .trim()
-        .toUpperCase()
-        .replace(/\s/g, "") === active.answer;
+function normalized(value) {
+  return String(value)
+    .trim()
+    .toUpperCase()
+    .replace(/\s/g, "")
+    .replace(/[–—-]/g, "");
+}
 
+function checkAnswer() {
+  if (!active || isSolved(active.day)) return;
+
+  let correct = false;
+
+  if (active.kind === "input" || active.kind === "circuit") {
+    const input = $("#answer-input");
+    correct = normalized(input.value) === normalized(active.answer);
   }
 
-
-  if (active.type === "choice") {
-    ok = selected[0] === active.answer;
+  if (active.kind === "choice") {
+    correct = selected[0] === active.answer;
   }
 
-
-  if (active.type === "sum") {
-
-    ok =
-      selected.length === 3 &&
-      selected.reduce((a, b) => a + b, 0) === 24;
-
+  if (active.kind === "dial") {
+    correct = dialValues.join("") === active.answer;
   }
 
+  if (active.kind === "maze") {
+    const visited = new Set(mazePath);
+    const allKeysFound = active.keys.every(key => visited.has(key));
+    const reachedGoal = mazePath.includes(active.goal);
 
-  if (active.type === "bits") {
-
-    ok =
-      bits.map(x => x ? "1" : "0").join("") === active.answer;
-
+    correct = allKeysFound && reachedGoal;
   }
 
-
-  if (active.type === "order") {
-
-    ok = order.join(",") === active.answer.join(",");
-
+  if (active.kind === "slide") {
+    correct = slide.every((number, index) => number === (index === 15 ? 0 : index + 1));
   }
 
+  if (active.kind === "final") {
+    const allFragmentsCollected = DAYS
+      .filter(day => day !== 23)
+      .every(day => savedState.fragments[day]);
 
-  if (active.type === "maze") {
+    if (!allFragmentsCollected) {
+      setFeedback("Dir fehlen noch Fragmente aus früheren Türchen.");
+      return;
+    }
 
-    ok = mazePath.join("|") === active.answer;
-
+    correct =
+      normalized($("#answer-input").value) === normalized(active.answer);
   }
 
-
-  if (active.type === "dials") {
-
-    ok =
-      content.querySelector(".dial-row").dataset.value === active.answer;
-
-  }
-
-
-  if (active.type === "slide") {
-
-    ok = slide.join(",") === active.answer;
-
-  }
-
-
-  if (ok) {
-
-    save(active.day);
-
-    $("#feedback").textContent = "Das ist die richtige Lösung.";
-    $("#feedback").className = "feedback good";
-
+  if (correct) {
+    savePuzzle(active);
+    setFeedback("Richtig! Du hast das Geheimnis gelüftet.", true);
     showSolved();
-
     renderCalendar();
-
   } else {
-
-    $("#feedback").textContent =
-      "Noch nicht ganz. Prüfe deine Überlegung und versuche es erneut.";
-
+    setFeedback("Noch nicht ganz. Prüfe deine Überlegung und versuche es erneut.");
   }
-
 }
 
 
-// ========================================
-// ERFOLG UND BEDIENUNG
-// ========================================
+/* =====================================================
+   HINWEISE
+   ===================================================== */
+
+function showNextHint() {
+  if (!active || isSolved(active.day)) return;
+
+  const hints = active.hints || [];
+
+  if (hintLevel >= hints.length) {
+    setFeedback("Du hast bereits alle drei Hinweise geöffnet.");
+    return;
+  }
+
+  $("#hint-text").hidden = false;
+  $("#hint-text").textContent = `Hinweis ${hintLevel + 1}: ${hints[hintLevel]}`;
+
+  hintLevel++;
+
+  $("#hint-button").textContent =
+    hintLevel >= hints.length
+      ? "Alle Hinweise geöffnet"
+      : `Hinweis ${hintLevel + 1} öffnen`;
+}
+
+
+/* =====================================================
+   FEEDBACK UND ERFOLG
+   ===================================================== */
+
+function setFeedback(message, good = false) {
+  const feedback = $("#feedback");
+  feedback.textContent = message;
+  feedback.className = good ? "feedback good" : "feedback";
+}
 
 function showSolved() {
-
   $("#solved-message").hidden = false;
+
+  if (active.fragment) {
+    $("#solved-message").textContent =
+      `✦ Gelöst! Dein Buchstabe für das Finale: ${active.fragment} ✦`;
+  } else {
+    $("#solved-message").textContent =
+      "✦ Das Weihnachtsgeheimnis ist gelüftet! ✦";
+  }
 
   $("#check-answer").hidden = true;
   $("#hint-button").hidden = true;
 
-  content.querySelectorAll("button,input").forEach(x => {
-    x.disabled = true;
+  content.querySelectorAll("button, input").forEach(element => {
+    element.disabled = true;
   });
-
 }
 
 
-$("#check-answer").addEventListener("click", check);
+/* =====================================================
+   BEDIENUNG
+   ===================================================== */
 
-$("#hint-button").addEventListener("click", () => {
-  $("#hint-text").hidden = !$("#hint-text").hidden;
-});
+$("#check-answer").addEventListener("click", checkAnswer);
+$("#hint-button").addEventListener("click", showNextHint);
 
 $("#close-dialog").addEventListener("click", () => {
   dialog.close();
 });
 
-dialog.addEventListener("click", e => {
-  if (e.target === dialog) dialog.close();
+dialog.addEventListener("click", event => {
+  if (event.target === dialog) {
+    dialog.close();
+  }
 });
 
 
-// Kalender initialisieren
+/* =====================================================
+   START
+   ===================================================== */
 
 renderCalendar();
 
 if (PREVIEW_MODE) {
-  console.info("Vorschau aktiv: ?preview=1 zeigt alle Türchen vorab.");
+  console.info("Vorschau aktiv: ?preview=1");
 }

@@ -688,3 +688,96 @@ footer span:nth-child(2) {
     transition: none !important;
   }
 }
+
+/* Neue Rätselversion */
+
+.puzzle-visual {
+  white-space: pre-line;
+  line-height: 1.9;
+}
+
+.maze-status {
+  margin: 12px 0;
+  text-align: center;
+  font-size: .85rem;
+  color: #887665;
+}
+
+.maze-cell.key-cell {
+  color: #a77b36;
+  background: #f3e4b9;
+}
+
+.maze-cell.path {
+  background: #dce5d4;
+  border-color: #829477;
+}
+
+.slide-grid {
+  width: min(100%, 340px);
+  margin: 16px auto;
+  gap: 6px;
+}
+
+.slide-cell {
+  aspect-ratio: 1;
+  min-width: 0;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+}
+
+.fragment-box {
+  margin: 16px 0;
+  padding: 18px;
+  border: 1px dashed #bba98b;
+  background: rgba(239, 228, 207, .45);
+  text-align: center;
+  border-radius: 8px;
+}
+
+.fragment-box strong {
+  display: block;
+  margin-bottom: 12px;
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+}
+
+.fragment-letters {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.1rem, 5vw, 1.7rem);
+  letter-spacing: .12em;
+  color: #53664d;
+  overflow-wrap: anywhere;
+  margin: 12px 0;
+}
+
+.fragment-box p {
+  font-size: .8rem;
+  color: #887665;
+}
+
+.hint {
+  padding: 12px 15px;
+  margin-top: 12px;
+  border-left: 3px solid #a58a5e;
+  background: rgba(239, 228, 207, .55);
+  line-height: 1.6;
+}
+
+#puzzle-prompt {
+  white-space: pre-line;
+  line-height: 1.7;
+}
+
+@media (max-width: 420px) {
+  .slide-grid {
+    gap: 4px;
+  }
+
+  .slide-cell {
+    padding: 5px;
+  }
+
+  .fragment-letters {
+    letter-spacing: .06em;
+  }
+}
